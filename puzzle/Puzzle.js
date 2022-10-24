@@ -41,11 +41,11 @@ window.onload = function () {
     }
 
     buttonSound.onclick = function (event) {
-        if (event.target.value === "Выключить") {
-            buttonSound.value = "Включить";
+        if (event.target.value === "Sound off") {
+            buttonSound.value = "Sound on";
             isSoundOn = false;
         } else {
-            buttonSound.value = "Выключить";
+            buttonSound.value = "Sound off";
             isSoundOn = true;
         }
     }
