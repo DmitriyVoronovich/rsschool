@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+
+    <link rel="stylesheet" href="./website.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.gstatic.com" crossorigin>
+
+</head>
+
+<body>
+<div id="wrapper">
+    <div id="header">
+        <div class="title">
+            Gem Puzzle
+        </div>
+    </div><!--id="header"-->
+
+    <div id="content">
+        <!--#this is where you place the contents of your web page-->
+        <table id="table">
+        </table>
+        <br>
+        <br>
+        <label>Rows <input type="text" name="rows" id="rows" value="4" size="2"></label>
+        <label>Columns <input type="text" name="columns" id="columns" value="4" size="2"></label>
+        <input type="button" id="newGame" class="button-start" value="Start New Game">
+        <button id="button-stop">Stop</button>
+        <br>
+        <br>
+        <div><span class="num"> Number Of Moves:</span>  <span id="moves">0</span></div>
+        <p class="sec"><span id="seconds">00</span>:<span id="tens">00</span></p>
+    </div>
+
+</div>
+<script type="text/javascript" src="Puzzle.js"></script>
+</body>
+</html>
