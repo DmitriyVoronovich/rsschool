@@ -1,25 +1,32 @@
+// import * as audio from "./sound/src_assets_sounds_move-sound.wav"
 let moves = 0;
 let table;
 let rows;
 let columns;
 let textMoves;
 let arrayForBoard;
+let isSoundOn = true;
+// sound
+function playAudio(){
+    if (isSoundOn) {
+        let myAudio = new Audio("./sound/src_assets_sounds_move-sound.wav");
+        myAudio.play();
+    }
+}
 
 // sec
-
 window.onload = function () {
-
-    let seconds = 00;
-    let tens = 00;
+    let seconds = 0;
+    let tens = 0;
     let appendTens = document.getElementById("tens")
     let appendSeconds = document.getElementById("seconds")
     let buttonStart = document.querySelector('.button-start');
     let buttonStop = document.getElementById('button-stop');
-    let buttonReset = document.getElementById('button-reset');
-    let Interval ;
+    let Interval;
+    let buttonSound = document.getElementById('button_sound');
 
 
-    buttonStart.onclick = function() {
+    buttonStart.onclick = function () {
         clearInterval(Interval);
         tens = "00";
         seconds = "00";
@@ -29,21 +36,28 @@ window.onload = function () {
         Interval = setInterval(startTimer, 10);
     }
 
-    buttonStop.onclick = function() {
+    buttonStop.onclick = function () {
         clearInterval(Interval);
     }
 
+    buttonSound.onclick = function (event) {
+        if (event.target.value === "Выключить") {
+            buttonSound.value = "Включить";
+            isSoundOn = false;
+        } else {
+            buttonSound.value = "Выключить";
+            isSoundOn = true;
+        }
+    }
 
-
-
-    function startTimer () {
+    function startTimer() {
         tens++;
 
-        if(tens <= 9){
+        if (tens <= 9) {
             appendTens.innerHTML = "0" + tens;
         }
 
-        if (tens > 9){
+        if (tens > 9) {
             appendTens.innerHTML = tens;
 
         }
@@ -56,7 +70,7 @@ window.onload = function () {
             appendTens.innerHTML = "0" + 0;
         }
 
-        if (seconds > 9){
+        if (seconds > 9) {
             appendSeconds.innerHTML = seconds;
         }
 
@@ -64,12 +78,10 @@ window.onload = function () {
 
 
 }
-
 // sec end
-function start()
-{
+function start() {
     let button = document.getElementById("newGame");
-    button.addEventListener( "click", startNewGame, false );
+    button.addEventListener("click", startNewGame, false);
     textMoves = document.getElementById("moves");
     table = document.getElementById("table");
     rows = 4;
@@ -77,8 +89,7 @@ function start()
     startNewGame();
 }
 
-function startNewGame()
-{
+function startNewGame() {
     let arrayOfNumbers = new Array();
     let arrayHasNumberBeenUsed;
     let randomNumber = 0;
@@ -89,29 +100,24 @@ function startNewGame()
     textMoves.innerHTML = moves;
     // Create the proper board size.
     arrayForBoard = new Array(rows);
-    for (let i = 0; i < rows; i++)
-    {
+    for (let i = 0; i < rows; i++) {
         arrayForBoard[i] = new Array(columns);
     }
     // Set up a temporary array for
     // allocating unique numbers.
-    arrayHasNumberBeenUsed = new Array( rows * columns );
-    for (let i = 0; i < rows * columns; i++)
-    {
+    arrayHasNumberBeenUsed = new Array(rows * columns);
+    for (let i = 0; i < rows * columns; i++) {
         arrayHasNumberBeenUsed[i] = 0;
     }
 
     // Assign random numbers to the board.
-    for (let i = 0; i < rows * columns; i++)
-    {
-        randomNumber = Math.floor(Math.random()*rows * columns);
+    for (let i = 0; i < rows * columns; i++) {
+        randomNumber = Math.floor(Math.random() * rows * columns);
         // If our random numer is unique, add it to the board.
-        if (arrayHasNumberBeenUsed[randomNumber] == 0)
-        {
+        if (arrayHasNumberBeenUsed[randomNumber] == 0) {
             arrayHasNumberBeenUsed[randomNumber] = 1;
             arrayOfNumbers.push(randomNumber);
-        }
-        else // Our number is not unique. Try again.
+        } else // Our number is not unique. Try again.
         {
             i--;
         }
@@ -119,10 +125,8 @@ function startNewGame()
 
     // Assign numbers to the game board.
     count = 0;
-    for (let i = 0; i < rows; i++)
-    {
-        for (let j = 0; j < columns; j++)
-        {
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
             arrayForBoard[i][j] = arrayOfNumbers[count];
 
             count++;
@@ -131,20 +135,14 @@ function startNewGame()
     showTable();
 }
 
-function showTable()
-{
+function showTable() {
     let outputString = "";
-    for (let i = 0; i < rows; i++)
-    {
+    for (let i = 0; i < rows; i++) {
         outputString += "<tr>";
-        for (let j = 0; j < columns; j++)
-        {
-            if (arrayForBoard[i][j] == 0)
-            {
+        for (let j = 0; j < columns; j++) {
+            if (arrayForBoard[i][j] == 0) {
                 outputString += "<td class=\"blank\"> </td>";
-            }
-            else
-            {
+            } else {
                 outputString += "<td class=\"tile\" onclick=\"moveThisTile(" + i + ", " + j + ")\">" + arrayForBoard[i][j] + "</td>";
             }
         } // end for (let j = 0; j < columns; j++)
@@ -154,47 +152,35 @@ function showTable()
     table.innerHTML = outputString;
 }
 
-function moveThisTile( tableRow, tableColumn)
-{
+function moveThisTile(tableRow, tableColumn) {
     if (checkIfMoveable(tableRow, tableColumn, "up") ||
         checkIfMoveable(tableRow, tableColumn, "down") ||
         checkIfMoveable(tableRow, tableColumn, "left") ||
-        checkIfMoveable(tableRow, tableColumn, "right") )
-    {
+        checkIfMoveable(tableRow, tableColumn, "right")) {
+        playAudio()
         incrementMoves();
-    }
-    else
-    {
+    } else {
         alert("ERROR: Cannot move tile!\nTile must be next to a blank space.");
     }
 
-    if (checkIfWinner())
-    {
+    if (checkIfWinner()) {
         alert("Congratulations! You solved the puzzle in " + moves + " moves.");
         startNewGame();
     }
 }
 
-function checkIfMoveable(rowCoordinate, columnCoordinate, direction)
-{
+function checkIfMoveable(rowCoordinate, columnCoordinate, direction) {
     // The following letiables an if else statements
     // make the function work for all directions.
     rowOffset = 0;
     columnOffset = 0;
-    if (direction == "up")
-    {
+    if (direction == "up") {
         rowOffset = -1;
-    }
-    else if (direction == "down")
-    {
+    } else if (direction == "down") {
         rowOffset = 1;
-    }
-    else if (direction == "left")
-    {
+    } else if (direction == "left") {
         columnOffset = -1;
-    }
-    else if (direction == "right")
-    {
+    } else if (direction == "right") {
         columnOffset = 1;
     }
 
@@ -202,10 +188,8 @@ function checkIfMoveable(rowCoordinate, columnCoordinate, direction)
     // If it can, move it and return true.
     if (rowCoordinate + rowOffset >= 0 && columnCoordinate + columnOffset >= 0 &&
         rowCoordinate + rowOffset < rows && columnCoordinate + columnOffset < columns
-    )
-    {
-        if ( arrayForBoard[rowCoordinate + rowOffset][columnCoordinate + columnOffset] == 0)
-        {
+    ) {
+        if (arrayForBoard[rowCoordinate + rowOffset][columnCoordinate + columnOffset] == 0) {
             arrayForBoard[rowCoordinate + rowOffset][columnCoordinate + columnOffset] = arrayForBoard[rowCoordinate][columnCoordinate];
             arrayForBoard[rowCoordinate][columnCoordinate] = 0;
             showTable();
@@ -215,17 +199,12 @@ function checkIfMoveable(rowCoordinate, columnCoordinate, direction)
     return false;
 }
 
-function checkIfWinner()
-{
+function checkIfWinner() {
     let count = 1;
-    for (let i = 0; i < rows; i++)
-    {
-        for (let j = 0; j < columns; j++)
-        {
-            if (arrayForBoard[i][j] != count)
-            {
-                if ( !(count === rows * columns && arrayForBoard[i][j] === 0 ))
-                {
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
+            if (arrayForBoard[i][j] != count) {
+                if (!(count === rows * columns && arrayForBoard[i][j] === 0)) {
                     return false;
                 }
             }
@@ -236,8 +215,7 @@ function checkIfWinner()
     return true;
 }
 
-function incrementMoves()
-{
+function incrementMoves() {
     moves++;
     if (textMoves) // This is nessessary.
     {
@@ -245,5 +223,5 @@ function incrementMoves()
     }
 }
 
-window.addEventListener( "load", start, false ); // This event listener makes the function start() execute when the window opens.
+window.addEventListener("load", start, false); // This event listener makes the function start() execute when the window opens.
 
