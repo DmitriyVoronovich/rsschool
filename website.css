@@ -143,3 +143,9 @@ table {
     border-left: 2px solid black;
     border-bottom: 2px solid black;
 }
+#button_sound {
+    color: white;
+    background-color: coral;
+    border: black 3px solid;
+}
+
